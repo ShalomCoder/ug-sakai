@@ -1,0 +1,12 @@
+# never commit credentials or captured personal data
+.env
+.env.*
+capture/
+probe_state.json
+node_modules/
+.vercel/
+*.log
+
+# OS noise
+.DS_Store
+Thumbs.db
