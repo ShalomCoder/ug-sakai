@@ -53,6 +53,12 @@ const {SakaiClient}=require('./sakai-client');
 
 Add `?fresh=1` to any read to bypass the proxy's per-user cache (the Refresh button does this).
 
+## Live deployment
+
+**<https://ug-sakai.vercel.app/app/>** — private, personal use only. Sign in with your student
+ID and password on the page; no credentials are stored in the Vercel project. Keep the URL to
+yourself: anyone who can sign in as you will see your data.
+
 ## Deploy to Vercel
 
 The repo includes `vercel.json` and `api/[...path].js`, so:
@@ -60,12 +66,12 @@ The repo includes `vercel.json` and `api/[...path].js`, so:
 ```bash
 vercel link
 vercel env add SESSION_SECRET production   # any long random string
-vercel env add SAKAI_ID production          # only if you want the .env button on the deployed app
-vercel env add SAKAI_PASSWORD production
+vercel env add ALLOW_ENV_LOGIN production   # value: 0 — sign in on the page, not via .env
 vercel --prod
 ```
 
-Set `ALLOW_ENV_LOGIN=0` on Vercel if you would rather type the password each time.
+The live project uses exactly those two variables. Locally you can instead leave
+`ALLOW_ENV_LOGIN` unset and put credentials in `.env` for the one-click button.
 
 Why it works there: Sakai sends no CORS headers, so the PWA and `/api/*` share one Vercel
 origin. The Sakai session is carried in an AES-256-GCM encrypted, HttpOnly cookie rather than
