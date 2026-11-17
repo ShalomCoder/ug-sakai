@@ -46,7 +46,7 @@ const {SakaiClient}=require('./sakai-client');
 
 ## API routes
 
-`POST /api/auth/login` (empty body = use `.env`), `POST /api/auth/logout`,
+`POST /api/login` (empty body = use `.env`), `POST /api/logout`,
 `GET /api/config`, `/api/me`, `/api/sites`, `/api/sites/:id/pages`, `/api/assignments`,
 `/api/announcements`, `/api/calendar`, `/api/resources?site=`, `/api/lessons?site=`,
 `/api/forums?site=`, `/api/grades?site=`, `/api/file?path=/access/content/...`.

@@ -215,7 +215,7 @@ async function api(path, opts = {}) {
 
 async function login(username, password) {
   const body = username ? { username, password } : {};
-  const out = await api('/api/auth/login', { method: 'POST', body: JSON.stringify(body) });
+  const out = await api('/api/login', { method: 'POST', body: JSON.stringify(body) });
   state.user = out.user;
   cacheSet('user', out.user);
   el('login-screen').hidden = true;
@@ -621,7 +621,7 @@ function wire() {
   el('refresh-btn').addEventListener('click', () => refresh(true));
 
   el('logout-btn').addEventListener('click', async () => {
-    try { await api('/api/auth/logout', { method: 'POST' }); } catch { /* ignore */ }
+    try { await api('/api/logout', { method: 'POST' }); } catch { /* ignore */ }
     for (const k of Object.keys(localStorage)) if (k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k);
     state.data = { sites: [], assignments: [], announcements: [], calendar: [], resources: {}, lessons: {}, grades: {}, pages: {} };
     state.user = null;

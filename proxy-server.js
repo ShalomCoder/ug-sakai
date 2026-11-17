@@ -11,11 +11,13 @@
  *   vercel deploy                   → https://<project>.vercel.app/app/
  *
  * Browser flow:
- *   POST /api/auth/login  { "username": "...", "password": "..." }  (empty body = use .env)
+ *   POST /api/login   { "username": "...", "password": "..." }  (empty body = use .env)
  *   GET  /api/me, /api/sites, /api/assignments, /api/announcements, /api/calendar
  *   GET  /api/resources?site=, /api/lessons?site=, /api/forums?site=, /api/grades?site=
  *   GET  /api/file?path=/access/content/group/<siteId>/...
- *   POST /api/auth/logout
+ *   POST /api/logout
+ *
+ * Note: /api/auth/* is reserved by Vercel's own authentication, hence /api/login.
  *
  * No npm dependencies. Node 18+.
  */
@@ -226,7 +228,7 @@ async function handler(req, res) {
 
   try {
     // ---- auth ------------------------------------------------------------
-    if (path === '/api/auth/login' && req.method === 'POST') {
+    if (path === '/api/login' && req.method === 'POST') {
       let { username, password } = await readJson(req);
       if (!username && !password) {
         if (!ENV_LOGIN) return send(res, 400, { error: 'username and password required' });
@@ -253,7 +255,7 @@ async function handler(req, res) {
       });
     }
 
-    if (path === '/api/auth/logout' && req.method === 'POST') {
+    if (path === '/api/logout' && req.method === 'POST') {
       const state = unseal(parseCookies(req.headers.cookie)[COOKIE_NAME]);
       if (state && state.sessionId) {
         const client = clientFor(req);
