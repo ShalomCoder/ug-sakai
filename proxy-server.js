@@ -33,14 +33,17 @@ const FRONTEND_DIR = nodePath.join(__dirname, 'public', 'app');
 const ENV_LOGIN = process.env.ALLOW_ENV_LOGIN !== '0'; // personal-use convenience
 const COOKIE_NAME = 'ug_session';
 
-// Load .env without overriding the real environment.
-try {
-  for (const line of fs.readFileSync(nodePath.join(__dirname, '.env'), 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
-    if (!m || process.env[m[1]] !== undefined) continue;
-    process.env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '');
-  }
-} catch { /* no .env — manual login still works */ }
+// Load .env locally only. It must never be read (or bundled) in the deployed app:
+// there, credentials are typed into the page and live solely in the encrypted cookie.
+if (!process.env.VERCEL) {
+  try {
+    for (const line of fs.readFileSync(nodePath.join(__dirname, '.env'), 'utf8').split(/\r?\n/)) {
+      const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+      if (!m || process.env[m[1]] !== undefined) continue;
+      process.env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '');
+    }
+  } catch { /* no .env — manual login still works */ }
+}
 
 // The cookie carries the Sakai session, so it must be authenticated encryption.
 // Set SESSION_SECRET explicitly in production; fall back to the .env password.
